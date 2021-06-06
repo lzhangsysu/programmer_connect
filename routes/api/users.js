@@ -8,7 +8,7 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
-// @route   GET api/users
+// @route   POST api/users
 // @desc    Register user
 // @access  Public
 router.post('/', 
@@ -61,7 +61,7 @@ async (req, res) => {
         // save user
         await user.save();
 
-        // Return jsonwebtoken
+        // Create jsonwebtoken
         const payload = {
             user: {
                 id: user.id
