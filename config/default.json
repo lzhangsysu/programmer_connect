@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://zltc1206:SyzFBrJFfHWHyE99@progconnect.0ecai.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://zltc1206:SyzFBrJFfHWHyE99@progconnect.0ecai.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret": "mySecretToken"
 }
