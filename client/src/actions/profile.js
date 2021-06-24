@@ -7,7 +7,8 @@ import {
     UPDATE_PROFILE,
     PROFILE_ERROR,
     CLEAR_PROFILE,
-    ACCOUNT_DELETED
+    ACCOUNT_DELETED,
+    GET_REPOS
 } from './types';
 
 
