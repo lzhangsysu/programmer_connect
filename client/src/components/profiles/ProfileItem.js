@@ -28,7 +28,7 @@ const ProfileItem = ({
                 ))}
             </ul>
         </div>
-    )
+    );
 }
 
 ProfileItem.propTypes = {
