@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import PostItem from './PostItem.js';
 import { getPosts } from '../../actions/post';
-import { post } from 'request';
 
 const Posts = ({ getPosts, post: { posts, loading }}) => {
     useEffect(() => {
         getPosts();
     }, [getPosts]);
 
-    return loading ? <Spinner /> : <Fragment>
+    return loading ? (<Spinner />) : (
+    <Fragment>
         <h1 className='large text-primary'>Posts</h1>
         <p className='lead'>
             <i className='fas fa-user'></i> Welcome to the community
@@ -23,6 +23,7 @@ const Posts = ({ getPosts, post: { posts, loading }}) => {
             ))}
         </div>
     </Fragment>
+    );
 };
 
 Posts.propTypes = {
