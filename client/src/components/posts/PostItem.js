@@ -11,10 +11,10 @@ const PostItem = ({
     auth,
     post: { 
         _id,
-        user, 
         text, 
         name, 
         avatar, 
+        user,
         likes, 
         comments, 
         date 
