@@ -14,7 +14,9 @@ const Post = require('../../models/Post');
 // @access  Private
 router.get('/me', auth, async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate(
+        const profile = await Profile.findOne({ 
+            user: req.user.id 
+        }).populate(
             'user', 
             ['name', 'avatar']
         );
@@ -220,17 +222,13 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id });
 
-        // Get remove index
-        const expIds = profile.experience.map(exp => exp._id.toString());
-        const removeIndex = expIds.indexOf(req.params.exp_id);
+        // Filter exprience array using _id
+        profile.experience = profile.experience.filter(
+            exp => exp._id.toString() !== req.params.exp_id
+        );
 
-        if (removeIndex === -1) {
-            return res.status(500).send('Server Error');
-        } else {
-            profile.experience.splice(removeIndex, 1);
-            await profile.save();
-            return res.status(200).json(profile);
-        }
+        await profile.save();
+        return res.status(200).json(profile);
     } catch (err) {
         console.err(err.message);
         res.status(500).send('Server Error');
@@ -300,19 +298,13 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id });
 
-        // Get remove index
-        const eduIds = profile.education.map(edu => edu._id.toString());
-        const removeIndex = eduIds.indexOf(req.params.edu_id);
+        // Filter education array using _id
+        profile.education = profile.experience.filter(
+            edu => edu._id.toString() !== req.params.edu_id
+        );
 
-        profile.education.splice(removeIndex, 1);
-
-        if (removeIndex === -1) {
-            return res.status(500).send('Server Error');
-        } else {
-            profile.education.splice(removeIndex, 1);
-            await profile.save();
-            return res.status(200).json(profile);
-        }
+        await profile.save();
+        return res.status(200).json(profile);
     } catch (err) {
         console.err(err.message);
         res.status(500).send('Server Error');
