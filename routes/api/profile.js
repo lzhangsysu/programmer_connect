@@ -231,13 +231,16 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         const profile = await Profile.findOne({ user: req.user.id });
 
         // Get remove index
-        const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.exp_id);
+        const expIds = profile.experience.map(exp => exp._id.toString());
+        const removeIndex = expIds.indexOf(req.params.exp_id);
 
-        profile.experience.splice(removeIndex, 1);
-
-        await profile.save();
-
-        res.json(profile);
+        if (removeIndex === -1) {
+            return res.status(500).send('Server Error');
+        } else {
+            profile.experience.splice(removeIndex, 1);
+            await profile.save();
+            return res.status(200).json(profile);
+        }
     } catch (err) {
         console.err(err.message);
         res.status(500).send('Server Error');
