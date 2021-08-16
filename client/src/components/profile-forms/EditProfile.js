@@ -37,6 +37,11 @@ const EditProfile = ({
                     profileData[key] = profile[key];
                 }
             }
+            for (const key in profile.social) {
+                if (key in profileData) {
+                    profileData[key] = profile.social[key];
+                }
+            }
             setFormData(profileData);
         }
     }, [loading, getCurrentProfile, profile]);
