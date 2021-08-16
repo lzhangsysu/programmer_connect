@@ -57,38 +57,38 @@ router.post(
 
         const {
             company,
-            website,
             location,
+            website,
             bio,
+            skills,
             status,
             githubusername,
-            skills,
             youtube,
-            facebook,
             twitter,
             instagram,
-            linkedin
+            linkedin,
+            facebook
         } = req.body;
 
         // Build profile object
-        const profileFields = {};
-        profileFields.user = req.user.id;
-        if (company) profileFields.company = company;
-        if (website) profileFields.website = website;
-        if (location) profileFields.location = location;
-        if (bio) profileFields.bio = bio;
-        if (status) profileFields.status = status;
-        if (githubusername) profileFields.githubusername = githubusername;
-        if (skills) {
-            profileFields.skills = skills.split(',').map(skill => skill.trim());
-        }
+        const profileFields = {
+            user: req.user.id,
+            company,
+            location,
+            website,
+            bio,
+            skills: Array.isArray(skills) ? skills : skills.split(',').map(skill => skill.trim()),
+            status,
+            githubusername
+        };
+        
         // Build social object
-        profileFields.social = {};
-        if (youtube) profileFields.social.youtube = youtube;
-        if (facebook) profileFields.social.facebook = facebook;
-        if (twitter) profileFields.social.twitter = twitter;
-        if (instagram) profileFields.social.instagram = instagram;
-        if (linkedin) profileFields.social.linkedin = linkedin;
+        for (const [key, value] of Object.entries(socialfields)) {
+            if (value.length > 0) {
+                socialfields[key] = value;
+            }
+            profileFields.social = socialfields;
+        }
 
         try {
             let profile = await Profile.findOneAndUpdate(
