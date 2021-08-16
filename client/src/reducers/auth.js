@@ -30,6 +30,13 @@ export default function(state = initialState, action) {
                 user: payload
             };
         case REGISTER_SUCCESS:
+            return {
+                ...state,
+                ...payload,
+                isAuthenticated: true,
+                loading: false,
+                user: payload
+            };
         case LOGIN_SUCCESS:
             return {
                 ...state,
