@@ -170,7 +170,10 @@ router.put('/experience',
     [
         check('title', 'Title is required').not().isEmpty(),
         check('company', 'Company is required').not().isEmpty(),
-        check('from', 'From date is required').not().isEmpty()
+        check('from', 'From date is required and must be valid')
+            .not()
+            .isEmpty()
+            .custom((value, { req }) => req.body.to ? value < req.body.to : true)
     ]
 ], 
 async (req, res) => {
@@ -246,7 +249,10 @@ router.put('/education',
         check('school', 'School is required').not().isEmpty(),
         check('degree', 'Degree is required').not().isEmpty(),
         check('fieldofstudy', 'Field of study is required').not().isEmpty(),
-        check('from', 'From date is required').not().isEmpty()
+        check('from', 'From date is required and must be valid')
+            .not()
+            .isEmpty()
+            .custom((value, { req }) => req.body.to ? value < req.body.to : true)
     ]
 ], 
 async (req, res) => {
