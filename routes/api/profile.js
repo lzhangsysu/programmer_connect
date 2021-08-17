@@ -84,7 +84,7 @@ router.post(
         
         // Build social object
         for (const [key, value] of Object.entries(socialfields)) {
-            if (value.length > 0) {
+            if (value && value.length > 0) {
                 socialfields[key] = value;
             }
             profileFields.social = socialfields;
