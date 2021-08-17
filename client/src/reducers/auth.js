@@ -46,7 +46,6 @@ export default function(state = initialState, action) {
             };
         case REGISTER_FAIL:
         case LOGIN_FAIL:
-        case AUTH_ERROR:
         case ACCOUNT_DELETED:
             return {
                 ...state,
@@ -55,6 +54,7 @@ export default function(state = initialState, action) {
                 loading: false,
                 user: null
             };
+        case AUTH_ERROR:
         case LOGOUT:
             return {
                 ...state,
