@@ -4,8 +4,8 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 
 const Post = require('../../models/Post');
-const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+const checkObjectId = require('../../middleware/checkObjectId');
 
 
 // @route   POST api/posts
@@ -13,12 +13,8 @@ const User = require('../../models/User');
 // @access  Private
 router.post(
     '/', 
-    [
-        auth,
-        [
-            check('text', 'Text is required').not().isEmpty()
-        ]
-    ], 
+    auth,
+    check('text', 'Text is required').notEmpty(),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -63,12 +59,12 @@ router.get('/', auth, async (req, res) => {
 // @route   GET api/posts/:id
 // @desc    Get post by id
 // @access  Private
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
         // check id format and post
-        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/) || !post) {
+        if (!post) {
             return res.status(404).json({ msg: 'Post not found' });
         }
         res.json(post);
@@ -82,12 +78,12 @@ router.get('/:id', auth, async (req, res) => {
 // @route   DELETE api/posts/:id
 // @desc    Delete post by id
 // @access  Private
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', [auth, checkObjectId('id')], async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
         // check id format and post
-        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/) || !post) {
+        if (!post) {
             return res.status(404).json({ msg: 'Post not found' });
         }
 
@@ -109,12 +105,12 @@ router.delete('/:id', auth, async (req, res) => {
 // @route   PUT api/posts/like/:id
 // @desc    Like a post
 // @access  Private
-router.put('/like/:id', auth, async (req, res) => {
+router.put('/like/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
         // check if post has alreay been liked by this user
-        if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+        if (post.likes.some((like) => like.user.toString() === req.user.id)) {
             return res.status(400).json({ msg: 'Post already liked' });
         }
 
@@ -133,19 +129,19 @@ router.put('/like/:id', auth, async (req, res) => {
 // @route   PUT api/posts/unlike/:id
 // @desc    Unlike a post
 // @access  Private
-router.put('/unlike/:id', auth, async (req, res) => {
+router.put('/unlike/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
         // check if post has NOT alreay been liked by this user
-        if (post.likes.filter(like => like.user.toString() === req.user.id).length == 0) {
+        if (!post.likes.some((like) => like.user.toString() === req.user.id)) {
             return res.status(400).json({ msg: 'Post has not yet been liked' });
         }
 
-        // Get remove index
-        const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id);
-
-        post.likes.splice(removeIndex, 1);
+        // remove like
+        post.likes = post.likes.filter(
+            ({ user }) => user.toString() !== req.user.id
+        );
         
         await post.save();
 
@@ -162,12 +158,9 @@ router.put('/unlike/:id', auth, async (req, res) => {
 // @access  Private
 router.post(
     '/comment/:id', 
-    [
-        auth,
-        [
-            check('text', 'Text is required').not().isEmpty()
-        ]
-    ], 
+    auth,
+    checkObjectId('id'),
+    check('text', 'Text is required').notEmpty(), 
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -218,10 +211,10 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
             return res.status(401).json({ msg: 'User not authorized' });
         }
 
-        // Get remove index
-        const removeIndex = post.comments.map(comment => comment.id).indexOf(req.params.comment_id);
-
-        post.comments.splice(removeIndex, 1);
+        // remove comment
+        post.comments = post.comments.filter(
+            ({ id }) => id !== req.params.comment_id
+        );
 
         await post.save();
 

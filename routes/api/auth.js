@@ -26,12 +26,11 @@ router.get('/', auth, async (req, res) => {
 // @access  Public
 router.post(
     '/', 
-    [
-        check('email', 'Please enter a valid Email')
-          .isEmail(),
-        check('password', 'Password is required')
-          .exists()
-    ], 
+    check('email', 'Please enter a valid Email')
+        .isEmail(),
+    check('password', 'Password is required')
+        .exists(),
+
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -69,7 +68,7 @@ router.post(
             jwt.sign(
                 payload, 
                 config.get('jwtSecret'),
-                { expiresIn : 36000000 },
+                { expiresIn : '5 days' },
                 (err, token) => {
                     if (err) throw err;
                     res.json({ token });
