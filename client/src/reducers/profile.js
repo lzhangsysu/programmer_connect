@@ -4,7 +4,8 @@ import {
     PROFILE_ERROR, 
     CLEAR_PROFILE, 
     GET_PROFILES, 
-    GET_REPOS 
+    GET_REPOS,
+    NO_REPOS
 } from "../actions/types";
 
 const initialState = {
@@ -51,6 +52,11 @@ function profileReducer (state = initialState, action) {
                 ...state,
                 repos: payload,
                 loading: false
+            }
+        case NO_REPOS:
+            return {
+                ...state,
+                repos: []
             }
         default:
             return state;
