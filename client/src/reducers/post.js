@@ -17,7 +17,7 @@ const initialState = {
     error: {}
 };
 
-export default function(state = initialState, action) {
+function postReducer(state = initialState, action) {
     const { type, payload } = action;
 
     switch(type) {
@@ -32,19 +32,19 @@ export default function(state = initialState, action) {
                 ...state,
                 post: payload,
                 loading: false
-            }
+            };
         case ADD_POST:
             return {
                 ...state,
                 posts: [payload, ...state.posts],
                 loading: false
-            }
+            };
         case DELETE_POST:
             return {
                 ...state,
                 posts: state.posts.filter(post => post._id !== payload),
                 loading: false
-            }
+            };
         case POST_ERROR:
             return {
                 ...state,
@@ -75,8 +75,10 @@ export default function(state = initialState, action) {
                     )
                 },
                 loading: false
-            }
+            };
         default:
             return state;
     }
 }
+
+export default postReducer;
