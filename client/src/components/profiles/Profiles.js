@@ -12,22 +12,26 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
     
     return (
         <Fragment>
-            { loading ? <Spinner /> : <Fragment>
-                <h1 className='large text-primary'>Programmers</h1>
-                <p className='lead'>
-                    <i className='fab fa-connectdevelop'></i> Browse and connect with fellow programmers
-                </p>
-                <div className='profiles'>
-                    { profiles.length > 0 ? (
-                        profiles.map(profile => (
-                            <ProfileItem key={profile._id} profile={profile} />
-                        ))
-                    ) : <h4>No profiles found...</h4> }
-                </div>
-            </Fragment>}
+            { loading ? (
+                <Spinner />
+            ) : (
+                <Fragment>
+                    <h1 className='large text-primary'>Programmers</h1>
+                    <p className='lead'>
+                        <i className='fab fa-connectdevelop'></i> Browse fellow programmers
+                    </p>
+                    <div className='profiles'>
+                        { profiles.length > 0 ? (
+                            profiles.map(profile => (
+                                <ProfileItem key={profile._id} profile={profile} />
+                            ))
+                        ) : <h4>No profile found...</h4> }
+                    </div>
+                </Fragment>
+            )}
         </Fragment>
-    )
-}
+    );
+};
 
 Profiles.propTypes = {
     getProfiles: PropTypes.func.isRequired,
