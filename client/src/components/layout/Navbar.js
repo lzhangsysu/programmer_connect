@@ -44,7 +44,7 @@ const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
       <h1>
         <Link to="/"><i className="fas fa-code"></i> ProCon</Link>
       </h1>
-      { !loading && (<Fragment>{ isAuthenticated ? authLinks : guestLinks }</Fragment>) }
+      <Fragment>{ isAuthenticated ? authLinks : guestLinks }</Fragment>
     </nav>
   )
 };
@@ -53,7 +53,7 @@ const Navbar = ({ auth: { isAuthenticated, loading}, logout }) => {
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
-}
+};
 
 
 const mapStateToProps = state => ({
